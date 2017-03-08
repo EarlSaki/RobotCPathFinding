@@ -73,7 +73,6 @@ void SensorWallCenter()
 	if(SensorValue(SpinSensor) < 15){
 		playTone(764, 15);
 		WallCenter = true;
-	}
 	} else {
 	//wall not here
 	WallCenter = false;
