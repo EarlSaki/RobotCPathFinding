@@ -18,6 +18,12 @@ struct Node
 	struct Node *right;
 }
 
+//dynamic global int structure using the vector structure
+int size;
+std::cin >> size;
+int *WallArray = new int [size];
+
+
 //predefined movements
 
 void ReverseFromWall()
