@@ -11,6 +11,10 @@ bool WallCenter;
 bool WallLeft;
 bool WallRight;
 
+//initialisation of Array that holds total wall measurment
+int WallDistanceCounter = 0;
+WallDistance = new int[100];
+
 //vector array of wall measurments
 void DynamicArrayCreation ()
 {
@@ -21,6 +25,31 @@ delete [] WallDistance;       //remeber to free memeory when finished.
 
 //simple vairable array size using copy over
 //http://www.cplusplus.com/forum/beginner/1601/
+}
+
+//array enlargment runs in oredr to expand array size
+void ArrayEnlargment ()
+{
+	//WallDistance Array is expanded by ten slots
+	WallDistanceDataStore = new int[WallDistanceCounter];
+	int DatastoreCounter = 0;
+	while (DatestoreCounter != WallDistanceCounter)
+	{
+	WallDistanceDataStore[DatastoreCounter] = WallDistance[DatastoreCounter];
+	DatastoreCounter++;
+	}
+	//deletes the the array to save clear the array
+	DatastoreCounter = 0;
+	delete[] WallDistance;
+	WallDistance = new int[WallDistanceCounter + 10];
+	while (WallDistanceDataStoreCounter != WallDistanceCounter)
+	{
+	WallDistance[WallDistanceDataStoreCounter] = WallDistanceDataStore[WallDistanceDataStoreCounter];
+	WallDistanceDataStoreCounter++;
+	}
+	//deletes the copy over to save memory
+	delete[] WallDistanceDataStore;
+	delete [] WallDistanceDataStoreCounter;
 }
 
 //tree traversal initialisation
@@ -181,14 +210,18 @@ void WallSearch()
 	}
 }
 
+
+
 //main start
 task main()
 {
+
 //place start node
 while(EndReached == false)
 {
+
 	WallSearch();
-	
+
 	//Check For Bool Change
 	if (SensorValue(WallSensor) == 1)
 	{
