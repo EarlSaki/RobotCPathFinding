@@ -10,12 +10,81 @@ bool WallCenter;
 bool WallLeft;
 bool WallRight;
 
-//tree traversal initialisation
+//place start node
+Node* root; //Root node pointer
+root = NULL; //global root struct of 3 options
+
+//tree traversal initialisation https://www.youtube.com/watch?v=COZK7NATh4k
+//13.50
+
 struct Node
 {
-	char data;
-	struct Node *left;
-	struct Node *right;
+	int data;
+	//was struct Node
+	struct Node* left;
+	struct Node* right;
+}
+//
+Node* GetNewNode(int data)
+{
+	Node* newNode = new Node();
+	(*newNode).data = data;
+	newNode.left = newNode.right = NULL;
+	return newNode;
+}
+
+Node* Insert(Node* root,int data) //was a void before
+{
+	if(root == NULL)
+	{
+		root = GetNewNode(data);
+		return root;
+	}
+	else if(data <= root.data)
+	{
+		root.left = Insert(root.left,data);
+	}
+	return root;
+}
+
+bool Search(Node* root, int data)
+{
+	if(root == NULL)
+	{
+	//empty Tree
+	return false;
+	}
+	else if(root.data == data)
+	{
+	return true;
+	}
+	else if(data <= root.data)
+	{
+	return Search(root.left,data);
+} else {
+	Search(root.right,data);
+}
+
+}
+
+//data search function in basic void to AVOID errors
+void TreeEntry()
+{
+	//basic empty tree code Because semantics //Node* root = NULL;
+	root = Insert(root,15);
+	root = Insert(root,10);
+	root = Insert(root,20);
+
+	root = Insert(root,25);
+	root = Insert(root,8);
+	root = Insert(root,12);
+
+	int number;
+	cout<<"number to search";
+	cin>>number;
+	//this bit is not correct but the node struct should work nicely BOYYS
+	if(Search(root,number) == tree) cout<<"Found";
+	else cout<<"Not Found";
 }
 
 //predefined movements
@@ -171,11 +240,12 @@ void WallSearch()
 //main start
 task main()
 {
-//place start node
+
+
 while(EndReached == false)
 {
 	WallSearch();
-	
+
 	//Check For Bool Change
 	if (SensorValue(WallSensor) == 1)
 	{
