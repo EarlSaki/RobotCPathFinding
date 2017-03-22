@@ -13,11 +13,12 @@ bool WallRight;
 
 //initialisation of Array that holds total wall measurment
 int WallDistanceCounter = 0;
-WallDistance = new int[100];
+WallDistance = new int[100][100][100][100];
 
 //vector array of wall measurments
 void DynamicArrayCreation ()
 {
+	//this is just test code
 int *WallPointer; //Declare pointer to type of array
 WallDistance = new int[100];   //use 'new' to create array of size x
 WallDistance[3] = 10;          //Use as normal (static) array
@@ -31,20 +32,20 @@ delete [] WallDistance;       //remeber to free memeory when finished.
 void ArrayEnlargment ()
 {
 	//WallDistance Array is expanded by ten slots
-	WallDistanceDataStore = new int[WallDistanceCounter];
+	WallDistanceDataStore = new int[WallDistanceCounter][WallDistanceCounter][WallDistanceCounter][WallDistanceCounter];
 	int DatastoreCounter = 0;
 	while (DatestoreCounter != WallDistanceCounter)
 	{
-	WallDistanceDataStore[DatastoreCounter] = WallDistance[DatastoreCounter];
+	WallDistanceDataStore[DatastoreCounter][DatastoreCounter][DatastoreCounter][DatastoreCounter] = WallDistance[DatastoreCounter][DatastoreCounter][DatastoreCounter][DatastoreCounter];
 	DatastoreCounter++;
 	}
 	//deletes the the array to save clear the array
 	DatastoreCounter = 0;
 	delete[] WallDistance;
-	WallDistance = new int[WallDistanceCounter + 10];
+	WallDistance = new int[WallDistanceCounter + 10][WallDistanceCounter + 10][WallDistanceCounter + 10][WallDistanceCounter + 10];
 	while (WallDistanceDataStoreCounter != WallDistanceCounter)
 	{
-	WallDistance[WallDistanceDataStoreCounter] = WallDistanceDataStore[WallDistanceDataStoreCounter];
+	WallDistance[WallDistanceDataStoreCounter][WallDistanceDataStoreCounter][WallDistanceDataStoreCounter][WallDistanceDataStoreCounter] = WallDistanceDataStore[WallDistanceDataStoreCounter][WallDistanceDataStoreCounter][WallDistanceDataStoreCounter][WallDistanceDataStoreCounter];
 	WallDistanceDataStoreCounter++;
 	}
 	//deletes the copy over to save memory
@@ -193,6 +194,8 @@ void WallSearch()
 	SensorWallCenter();
 	SensorWallRight();
 	SensorWallLeft();
+	//logging sensor Data
+	SensorValue(SpinSensor)
 
 	if (WallCenter == false )
 	{
