@@ -12,15 +12,23 @@ bool WallLeft;
 bool WallRight;
 
 //initialisation of Array that holds total wall measurment
-int WallDistanceCounter = 0;
-WallDistance = new int[100][100][100][100];
+int WallDistancePointer = 0;
+int WallDistanceNodePos[100];
 
 //vector array of wall measurments
+class WallDistance
+{
+//the fact this is public is not very good
+public:
+	int DistanceArray[100];  //create an array to record the wall distances in a set class
+	bool IsWall;
+};
+
 void DynamicArrayCreation ()
 {
-	//this is just test code
+////this is just test code
 int *WallPointer; //Declare pointer to type of array
-WallDistance = new int[100];   //use 'new' to create array of size x
+ //using 3 array instead of 1 one dimmentional arrays because it saves a lot more memory
 WallDistance[3] = 10;          //Use as normal (static) array
 delete [] WallDistance;       //remeber to free memeory when finished.
 
@@ -31,26 +39,87 @@ delete [] WallDistance;       //remeber to free memeory when finished.
 //array enlargment runs in oredr to expand array size
 void ArrayEnlargment ()
 {
-	//WallDistance Array is expanded by ten slots
-	WallDistanceDataStore = new int[WallDistanceCounter][WallDistanceCounter][WallDistanceCounter][WallDistanceCounter];
-	int DatastoreCounter = 0;
-	while (DatestoreCounter != WallDistanceCounter)
+	//WallDistance Array is expanded by 50 slots
+	int DistanceArrayTempStore[WallDistancePointer];
+	int DistanceArrayTempCounter = 0;
+
+	//center version
+	while (DistanceArrayTempCounter != WallDistancePointer)
 	{
-	WallDistanceDataStore[DatastoreCounter][DatastoreCounter][DatastoreCounter][DatastoreCounter] = WallDistance[DatastoreCounter][DatastoreCounter][DatastoreCounter][DatastoreCounter];
-	DatastoreCounter++;
+		DistanceArrayTempCounter[DistanceArrayTempCounter] = Center.DistanceArray[WallDistancePointer];
+		DistanceArrayTempCounter++;
 	}
-	//deletes the the array to save clear the array
-	DatastoreCounter = 0;
-	delete[] WallDistance;
-	WallDistance = new int[WallDistanceCounter + 10][WallDistanceCounter + 10][WallDistanceCounter + 10][WallDistanceCounter + 10];
-	while (WallDistanceDataStoreCounter != WallDistanceCounter)
-	{
-	WallDistance[WallDistanceDataStoreCounter][WallDistanceDataStoreCounter][WallDistanceDataStoreCounter][WallDistanceDataStoreCounter] = WallDistanceDataStore[WallDistanceDataStoreCounter][WallDistanceDataStoreCounter][WallDistanceDataStoreCounter][WallDistanceDataStoreCounter];
-	WallDistanceDataStoreCounter++;
-	}
+	//deletes the old array! this is expermental
+	delete [] Center.DistanceArray;
+	Center.DistanceArray = new int [DistancePointer + 50];
 	//deletes the copy over to save memory
-	delete[] WallDistanceDataStore;
-	delete [] WallDistanceDataStoreCounter;
+	DistanceArrayTempCounter = 0;
+	while (DistanceArrayTempCounter != DistancePointer)
+	{
+		Center.Array[DistanceTempCounter] = DistanceArrayTempStore[DistanceArrayTempStore];
+		DistanceArrayTempCounter++;
+	}
+
+	//resets the counter for the next version
+	DistanceArrayTempCounter = 0;
+	//Left version
+	while (DistanceArrayTempCounter != WallDistancePointer)
+	{
+		DistanceArrayTempCounter[DistanceArrayTempCounter] = Left.DistanceArray[WallDistancePointer];
+		DistanceArrayTempCounter++;
+	}
+	//deletes the old array! this is expermental
+	delete [] Left.DistanceArray;
+	Left.DistanceArray = new int [DistancePointer + 50];
+	//deletes the copy over to save memory
+	DistanceArrayTempCounter = 0;
+	while (DistanceArrayTempCounter != DistancePointer)
+	{
+		Left.Array[DistanceTempCounter] = DistanceArrayTempStore[DistanceArrayTempStore];
+		DistanceArrayTempCounter++;
+	}
+
+	//resets the counter for the next version
+	DistanceArrayTempCounter = 0;
+	//Right version
+	while (DistanceArrayTempCounter != WallDistancePointer)
+	{
+		DistanceArrayTempCounter[DistanceArrayTempCounter] = Right.DistanceArray[WallDistancePointer];
+		DistanceArrayTempCounter++;
+	}
+	//deletes the old array! this is expermental
+	delete [] Right.DistanceArray;
+	Right.DistanceArray = new int [DistancePointer + 50];
+	//deletes the copy over to save memory
+	DistanceArrayTempCounter = 0;
+	while (DistanceArrayTempCounter != DistancePointer)
+	{
+		Right.Array[DistanceTempCounter] = DistanceArrayTempStore[DistanceArrayTempStore];
+		DistanceArrayTempCounter++;
+	}
+
+	//resets the counter for the next version
+	DistanceArrayTempCounter = 0;
+	//Node Expansion version
+	while (DistanceArrayTempCounter != WallDistancePointer)
+	{
+		DistanceArrayTempCounter[DistanceArrayTempCounter] = WallDistanceNodePos[WallDistancePointer];
+		DistanceArrayTempCounter++;
+	}
+	//deletes the old array! this is expermental
+	delete [] WallDistanceNodePos;
+	WallDistanceNodePos = new int [DistancePointer + 50];
+	//deletes the copy over to save memory
+	DistanceArrayTempCounter = 0;
+	while (DistanceArrayTempCounter != DistancePointer)
+	{
+		WallDistanceNodePos[DistanceTempCounter] = DistanceArrayTempStore[DistanceArrayTempStore];
+		DistanceArrayTempCounter++;
+	}
+
+	//saves stack memory space
+	delete [] DistanceTempCounter;
+	delete [] DistanceArrayTempStore;
 }
 
 //tree traversal initialisation
@@ -115,11 +184,12 @@ void SensorWallCenter()
 {
 	if(SensorValue(SpinSensor) < 15){
 		playTone(764, 15);
-		WallCenter = true;
+		Center.IsWall = true;
 	} else {
 	//wall not here
-	WallCenter = false;
+	Center.IsWall = false;
 	}
+	Center.DistanceArray[WallDistancePointer] = SensorValue(SpinSensor);
 }
 
 void SensorWallLeft()
@@ -131,13 +201,15 @@ void SensorWallLeft()
 	motor[SensorMotor] = 0;
 	wait1Msec(500);
 	//takes reading
-	//
 	if(SensorValue(SpinSensor) < 15){
 		playTone(764, 15);
-		WallLeft = true;
+		Left.IsWall = true;
 	} else {
-		WallLeft = false;
+		Left.IsWall = false;
 	}
+
+	//Records the Sensor value in the array before it is moved back
+	Left.DistanceArray[WallDistancePointer] = SensorValue(SpinSensor);
 	//
 	//moves sensor right
 	motor[SensorMotor] = -12;
@@ -159,11 +231,13 @@ void SensorWallRight()
 	//
 	if(SensorValue(SpinSensor) < 15){
 		playTone(764, 15);
-		WallRight = true;
+		Right.IsWall = true;
 	} else {
-		WallRight = false;
+		Right.IsWall = false;
 	}
-	//
+	//Records the Sensor value in the array before it is moved back
+	Right.DistanceArray[WallDistancePointer] = SensorValue(SpinSensor);
+
 	//moves sensor left
 	motor[SensorMotor] = 12;
 	wait1Msec(1000);
@@ -195,17 +269,17 @@ void WallSearch()
 	SensorWallRight();
 	SensorWallLeft();
 	//logging sensor Data
-	SensorValue(SpinSensor)
+	WallDistancePointer++; //iterates the position in each array
 
-	if (WallCenter == false )
+	if (Center.IsWall == false )
 	{
 		//no wall in front
 		CenterTurn();
-	}else if (WallLeft == false){
+	}else if (Left.IsWall == false){
 		LeftTurn();
-	}else if (WallRight == false){
+	}else if (Right.IsWall == false){
 		RightTurn();
-	}else if (WallCenter == true && WallLeft == true && WallRight == true){
+	}else if (Center.IsWall == true && Left.IsWall == true && Right.IsWall == true){
 		//DeadEnd Script
 		playTone(764, 15);
 		playTone(764, 15);
@@ -218,6 +292,8 @@ void WallSearch()
 //main start
 task main()
 {
+
+WallDistance Right, Left, Center; //class declaration
 
 //place start node
 while(EndReached == false)
