@@ -11,53 +11,44 @@ bool WallCenter;
 bool WallLeft;
 bool WallRight;
 
+//Distance Array Step For Left, Right and Center
+int DistanceArrayCenter[100];
+int DistanceArrayRight[100];
+int DistanceArrayLeft[100];
+
 
 //initialisation of Array that holds total wall measurment
 int WallDistancePointer = 0;
 int WallDistanceNodePos[100];
 
-//vector array of wall measurments
-class WallDistance
-{
-//the fact this is public is not very good
-public:
-	int DistanceArray[100];  //create an array to record the wall distances in a set class
-	bool IsWall;
-};
-
-void DynamicArrayCreation ()
-{
-////this is just test code
-int *WallPointer; //Declare pointer to type of array
- //using 3 array instead of 1 one dimmentional arrays because it saves a lot more memory
-WallDistance[3] = 10;          //Use as normal (static) array
-delete [] WallDistance;       //remeber to free memeory when finished.
-
 //simple vairable array size using copy over
 //http://www.cplusplus.com/forum/beginner/1601/
-}
 
 //array enlargment runs in oredr to expand array size
 void ArrayEnlargment ()
 {
 	//WallDistance Array is expanded by 50 slots
-	int DistanceArrayTempStore[WallDistancePointer];
+	int *mempoint;
+	mempoint = &WallDistancePointer;
+//testing pointing to mem address rather than value
+	int DistanceArrayTempStore[*mempoint];
+
 	int DistanceArrayTempCounter = 0;
 
 	//center version
 	while (DistanceArrayTempCounter != WallDistancePointer)
 	{
-		DistanceArrayTempCounter[DistanceArrayTempCounter] = Center.DistanceArray[WallDistancePointer];
+		DistanceArrayTempCounter[DistanceArrayTempCounter] = DistanceArrayCenter[WallDistancePointer];
 		DistanceArrayTempCounter++;
 	}
 	//deletes the old array! this is expermental
-	delete [] Center.DistanceArray;
-	Center.DistanceArray = new int [DistancePointer + 50];
+	delete [] DistanceArrayCenter;
+	DistanceArrayCenter = new int [DistancePointer + 50];
 	//deletes the copy over to save memory
 	DistanceArrayTempCounter = 0;
 	while (DistanceArrayTempCounter != DistancePointer)
 	{
-		Center.Array[DistanceTempCounter] = DistanceArrayTempStore[DistanceArrayTempStore];
+		DistanceArrayCenter[DistanceTempCounter] = DistanceArrayTempStore[DistanceArrayTempStore];
 		DistanceArrayTempCounter++;
 	}
 
@@ -66,17 +57,17 @@ void ArrayEnlargment ()
 	//Left version
 	while (DistanceArrayTempCounter != WallDistancePointer)
 	{
-		DistanceArrayTempCounter[DistanceArrayTempCounter] = Left.DistanceArray[WallDistancePointer];
+		DistanceArrayTempCounter[DistanceArrayTempCounter] = DistanceArrayLeft[WallDistancePointer];
 		DistanceArrayTempCounter++;
 	}
 	//deletes the old array! this is expermental
-	delete [] Left.DistanceArray;
-	Left.DistanceArray = new int [DistancePointer + 50];
+	delete [] DistanceArrayLeft;
+	DistanceArrayLeft = new int [DistancePointer + 50];
 	//deletes the copy over to save memory
 	DistanceArrayTempCounter = 0;
 	while (DistanceArrayTempCounter != DistancePointer)
 	{
-		Left.Array[DistanceTempCounter] = DistanceArrayTempStore[DistanceArrayTempStore];
+		DistanceArrayLeft[DistanceTempCounter] = DistanceArrayTempStore[DistanceArrayTempStore];
 		DistanceArrayTempCounter++;
 	}
 
@@ -85,17 +76,17 @@ void ArrayEnlargment ()
 	//Right version
 	while (DistanceArrayTempCounter != WallDistancePointer)
 	{
-		DistanceArrayTempCounter[DistanceArrayTempCounter] = Right.DistanceArray[WallDistancePointer];
+		DistanceArrayTempCounter[DistanceArrayTempCounter] = DistanceArrayRight[WallDistancePointer];
 		DistanceArrayTempCounter++;
 	}
 	//deletes the old array! this is expermental
-	delete [] Right.DistanceArray;
-	Right.DistanceArray = new int [DistancePointer + 50];
+	delete [] DistanceArrayRight;
+	DistanceArrayRight = new int [DistancePointer + 50];
 	//deletes the copy over to save memory
 	DistanceArrayTempCounter = 0;
 	while (DistanceArrayTempCounter != DistancePointer)
 	{
-		Right.Array[DistanceTempCounter] = DistanceArrayTempStore[DistanceArrayTempStore];
+		DistanceArrayRight[DistanceTempCounter] = DistanceArrayTempStore[DistanceArrayTempStore];
 		DistanceArrayTempCounter++;
 	}
 
@@ -262,12 +253,12 @@ void SensorWallCenter()
 {
 	if(SensorValue(SpinSensor) < 15){
 		playTone(764, 15);
-		Center.IsWall = true;
+		WallCenter = true;
 	} else {
 	//wall not here
-	Center.IsWall = false;
+	WallCenter = false;
 	}
-	Center.DistanceArray[WallDistancePointer] = SensorValue(SpinSensor);
+	[WallDistancePointer] = SensorValue(SpinSensor);
 }
 
 void SensorWallLeft()
@@ -281,13 +272,13 @@ void SensorWallLeft()
 	//takes reading
 	if(SensorValue(SpinSensor) < 15){
 		playTone(764, 15);
-		Left.IsWall = true;
+		WallLeft = true;
 	} else {
-		Left.IsWall = false;
+		WallLeft = false;
 	}
 
 	//Records the Sensor value in the array before it is moved back
-	Left.DistanceArray[WallDistancePointer] = SensorValue(SpinSensor);
+	DistanceArrayLeft[WallDistancePointer] = SensorValue(SpinSensor);
 	//
 	//moves sensor right
 	motor[SensorMotor] = -12;
@@ -309,12 +300,12 @@ void SensorWallRight()
 	//
 	if(SensorValue(SpinSensor) < 15){
 		playTone(764, 15);
-		Right.IsWall = true;
+		WallRight = true;
 	} else {
-		Right.IsWall = false;
+		WallRight = false;
 	}
 	//Records the Sensor value in the array before it is moved back
-	Right.DistanceArray[WallDistancePointer] = SensorValue(SpinSensor);
+	DistanceArrayRight[WallDistancePointer] = SensorValue(SpinSensor);
 
 	//moves sensor left
 	motor[SensorMotor] = 12;
@@ -349,15 +340,15 @@ void WallSearch()
 	//logging sensor Data
 	WallDistancePointer++; //iterates the position in each array
 
-	if (Center.IsWall == false )
+	if (WallCenter == false )
 	{
 		//no wall in front
 		CenterTurn();
-	}else if (Left.IsWall == false){
+	}else if (WallLeft == false){
 		LeftTurn();
-	}else if (Right.IsWall == false){
+	}else if (WallRight == false){
 		RightTurn();
-	}else if (Center.IsWall == true && Left.IsWall == true && Right.IsWall == true){
+	}else if (WallCenter == true && WallLeft == true && WallRight == true){
 		//DeadEnd Script
 		playTone(764, 15);
 		playTone(764, 15);
@@ -371,8 +362,6 @@ void WallSearch()
 task main()
 {
 
-
-WallDistance Right, Left, Center; //class declaration
 
 //place start node
 
